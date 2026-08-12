@@ -1,5 +1,5 @@
-name: 'my_new_project'
-profile: default
+name: 'snowflake_project'
+profile: snowflake_project
 version: '1.0.0'
 config-version: 2
 

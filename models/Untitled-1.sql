@@ -1,0 +1,1 @@
+select * from supermarkets.dbt_najay.annex1

@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: stg_items
+    description: Item master data from annex1.
+    columns:
+      - name: item_code
+        tests:
+          - not_null
+          - unique
+      - name: category_code
+        tests:
+          - not_null
+      - name: category_name
+        tests:
+          - not_null
+
+  - name: stg_sales
+    description: Sales transactions from annex2.
+    columns:
+      - name: item_code
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_items')
+              field: item_code
+      - name: quantity_sold
+        tests:
+          - not_null
+
+  - name: item_category_sales
+    description: Total quantity sold by item and category.
+    columns:
+      - name: item_code
+        tests:
+          - not_null
+          - unique
+      - name: category
+        tests:
+          - not_null
+      - name: number_of_items_sold
+        tests:
+          - not_null

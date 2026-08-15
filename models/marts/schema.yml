@@ -1,0 +1,160 @@
+version: 2
+
+models:
+  - name: category_item_counts
+    description: Category-level count of distinct items in the assortment.
+    columns:
+      - name: category_code
+        description: Category identifier.
+        tests:
+          - not_null
+      - name: category_name
+        description: Category name.
+        tests:
+          - not_null
+      - name: item_count
+        description: Number of items assigned to the category.
+        tests:
+          - not_null
+
+  - name: category_loss
+    description: Item-level loss-rate view enriched with category information.
+    columns:
+      - name: category_code
+        description: Category identifier.
+        tests:
+          - not_null
+      - name: category_name
+        description: Category name.
+        tests:
+          - not_null
+      - name: item_code
+        description: Item identifier.
+        tests:
+          - not_null
+          - unique
+      - name: item_name
+        description: Item name.
+        tests:
+          - not_null
+      - name: loss_rate
+        description: Item loss-rate percentage.
+        tests:
+          - not_null
+
+  - name: category_loss_by_year
+    description: Returned quantity aggregated by category and year.
+    columns:
+      - name: loss_year
+        description: Calendar year of the return activity.
+        tests:
+          - not_null
+      - name: category_code
+        description: Category identifier.
+        tests:
+          - not_null
+      - name: category_name
+        description: Category name.
+        tests:
+          - not_null
+      - name: loss_transaction_count
+        description: Number of return transactions in the category-year grain.
+        tests:
+          - not_null
+      - name: loss_quantity
+        description: Total returned quantity in the category-year grain.
+        tests:
+          - not_null
+
+  - name: item_category_sales
+    description: Item-level sold quantity aggregated with category context.
+    columns:
+      - name: item_code
+        description: Item identifier.
+        tests:
+          - not_null
+          - unique
+      - name: category
+        description: Category name for the item.
+        tests:
+          - not_null
+      - name: number_of_items_sold
+        description: Total sold quantity for the item.
+        tests:
+          - not_null
+
+  - name: item_daily_sales
+    description: Daily item sales aggregated to item and category grain.
+    columns:
+      - name: sales_date
+        description: Calendar date of sales activity.
+        tests:
+          - not_null
+      - name: category_code
+        description: Category identifier.
+        tests:
+          - not_null
+      - name: category_name
+        description: Category name.
+        tests:
+          - not_null
+      - name: item_code
+        description: Item identifier.
+        tests:
+          - not_null
+      - name: item_name
+        description: Item name.
+        tests:
+          - not_null
+      - name: transaction_count
+        description: Number of transaction rows contributing to the daily item grain.
+        tests:
+          - not_null
+      - name: total_quantity_sold
+        description: Total quantity sold for the day and item.
+        tests:
+          - not_null
+      - name: gross_sales_amount
+        description: Gross sales amount before cost estimates.
+        tests:
+          - not_null
+
+  - name: item_profitability
+    description: Daily item profitability view combining sales, wholesale cost, and loss-rate context.
+    columns:
+      - name: sales_date
+        description: Calendar date of sales activity.
+        tests:
+          - not_null
+      - name: category_code
+        description: Category identifier.
+        tests:
+          - not_null
+      - name: category_name
+        description: Category name.
+        tests:
+          - not_null
+      - name: item_code
+        description: Item identifier.
+        tests:
+          - not_null
+      - name: item_name
+        description: Item name.
+        tests:
+          - not_null
+      - name: total_quantity_sold
+        description: Total quantity sold for the day and item.
+        tests:
+          - not_null
+      - name: gross_sales_amount
+        description: Gross sales amount before cost estimates.
+        tests:
+          - not_null
+      - name: wholesale_price
+        description: Wholesale unit cost matched on the item and sales date.
+      - name: loss_rate
+        description: Item loss-rate percentage.
+      - name: estimated_cost_amount
+        description: Estimated cost amount based on quantity sold and wholesale price.
+      - name: estimated_margin_amount
+        description: Estimated gross margin amount before loss adjustments.

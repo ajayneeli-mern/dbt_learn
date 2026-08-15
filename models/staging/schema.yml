@@ -1,0 +1,102 @@
+version: 2
+
+models:
+  - name: stg_items
+    description: Standardized item master data derived from the current seeded raw input.
+    columns:
+      - name: item_code
+        description: Canonical item identifier.
+        tests:
+          - not_null
+          - unique
+      - name: item_name
+        description: Standardized item name.
+        tests:
+          - not_null
+      - name: category_code
+        description: Canonical category identifier for the item.
+        tests:
+          - not_null
+      - name: category_name
+        description: Standardized category name for the item.
+        tests:
+          - not_null
+
+  - name: stg_sales
+    description: Standardized sales and return transactions derived from the current seeded raw input.
+    columns:
+      - name: sales_date
+        description: Transaction calendar date.
+        tests:
+          - not_null
+      - name: sales_time
+        description: Transaction time component.
+        tests:
+          - not_null
+      - name: item_code
+        description: Canonical item identifier recorded on the transaction.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_items')
+                field: item_code
+      - name: sale_or_return
+        description: Standardized sale versus return flag.
+        tests:
+          - not_null
+      - name: quantity_sold
+        description: Quantity sold or returned on the transaction row.
+        tests:
+          - not_null
+      - name: unit_selling_price
+        description: Unit selling price captured on the transaction row.
+        tests:
+          - not_null
+      - name: discount
+        description: Discount indicator captured on the transaction row.
+        tests:
+          - not_null
+
+  - name: stg_wholesale_prices
+    description: Standardized daily wholesale prices by item, enriched with category from the item master.
+    columns:
+      - name: price_date
+        description: Effective date of the wholesale price.
+        tests:
+          - not_null
+      - name: item_code
+        description: Canonical item identifier for the priced product.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_items')
+                field: item_code
+      - name: wholesale_price
+        description: Daily wholesale unit cost for the item.
+        tests:
+          - not_null
+      - name: category_name
+        description: Category name joined from the item master.
+
+  - name: stg_item_loss_rates
+    description: Standardized item-level loss-rate assumptions.
+    columns:
+      - name: item_code
+        description: Canonical item identifier for the loss-rate record.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('stg_items')
+                field: item_code
+      - name: item_name
+        description: Item name carried with the loss-rate record.
+        tests:
+          - not_null
+      - name: loss_rate
+        description: Item loss-rate percentage.
+        tests:
+          - not_null

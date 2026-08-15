@@ -1,0 +1,88 @@
+version: 2
+
+seeds:
+  - name: annex1
+    description: Seeded item master data used as the current raw input for item and category attributes.
+    columns:
+      - name: Item_Code
+        description: Natural item identifier from the source dataset.
+        tests:
+          - not_null
+          - unique
+      - name: Item_Name
+        description: Source item name.
+        tests:
+          - not_null
+      - name: Category_Code
+        description: Natural category identifier assigned to the item.
+        tests:
+          - not_null
+      - name: Category_Name
+        description: Source category name for the item.
+        tests:
+          - not_null
+
+  - name: annex2
+    description: Seeded sales transaction data used as the current raw input for sales activity.
+    columns:
+      - name: Date
+        description: Transaction calendar date.
+        tests:
+          - not_null
+      - name: Time
+        description: Transaction timestamp time component.
+        tests:
+          - not_null
+      - name: Item_Code
+        description: Item identifier recorded on the transaction.
+        tests:
+          - not_null
+      - name: Quantity_Sold
+        description: Quantity sold or returned for the transaction row.
+        tests:
+          - not_null
+      - name: Unit_Selling_Price
+        description: Unit retail price charged on the transaction row.
+        tests:
+          - not_null
+      - name: Sale_or_Return
+        description: Flag indicating whether the row is a sale or a return.
+        tests:
+          - not_null
+      - name: Discount
+        description: Discount indicator captured on the transaction.
+        tests:
+          - not_null
+
+  - name: annex3
+    description: Seeded daily wholesale price data used as the current raw input for item cost estimates.
+    columns:
+      - name: Date
+        description: Effective date of the wholesale price.
+        tests:
+          - not_null
+      - name: Item_Code
+        description: Item identifier for the priced product.
+        tests:
+          - not_null
+      - name: Wholesale_Price
+        description: Unit wholesale cost for the item on the effective date.
+        tests:
+          - not_null
+
+  - name: annex4
+    description: Seeded item loss rate data used as the current raw input for shrink or waste assumptions.
+    columns:
+      - name: Item_Code
+        description: Item identifier for the loss-rate record.
+        tests:
+          - not_null
+          - unique
+      - name: Item_Name
+        description: Source item name associated with the loss rate.
+        tests:
+          - not_null
+      - name: Loss_Rate
+        description: Percentage loss rate associated with the item.
+        tests:
+          - not_null

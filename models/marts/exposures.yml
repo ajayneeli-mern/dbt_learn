@@ -1,0 +1,17 @@
+version: 2
+
+exposures:
+  - name: daily_sales_dashboard
+    label: Daily Sales Dashboard
+    type: dashboard
+    maturity: medium
+    url: https://bi.example.com/dashboards/daily-sales
+    description: >
+      Example BI dashboard for sales ops. Shows daily item sales and
+      profitability. Documented as an exposure so lineage shows downstream impact.
+    depends_on:
+      - ref('item_daily_sales')
+      - ref('item_profitability')
+    owner:
+      name: Analytics Team
+      email: analytics@example.com

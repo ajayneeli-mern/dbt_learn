@@ -7,7 +7,7 @@ models:
       Not materialized in the warehouse — inlined as a CTE wherever it is ref'd.
     columns:
       - name: item_sk
-        description: Surrogate key hashed from item_code (dbt_utils.generate_surrogate_key).
+        description: Surrogate key hashed from item_code (project surrogate_key macro).
         tests:
           - not_null
           - unique

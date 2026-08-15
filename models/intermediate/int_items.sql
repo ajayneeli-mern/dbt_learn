@@ -13,7 +13,7 @@ with items as (
 )
 
 select
-    {{ dbt_utils.generate_surrogate_key(['item_code']) }} as item_sk,
+    {{ surrogate_key(['item_code']) }} as item_sk,
     item_code,
     item_name,
     category_code,

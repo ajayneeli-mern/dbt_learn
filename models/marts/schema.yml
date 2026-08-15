@@ -69,8 +69,13 @@ models:
   - name: item_category_sales
     description: Item-level sold quantity aggregated with category context.
     columns:
+      - name: item_sk
+        description: Surrogate key for the item (from int_items).
+        tests:
+          - not_null
+          - unique
       - name: item_code
-        description: Item identifier.
+        description: Natural item identifier.
         tests:
           - not_null
           - unique
@@ -98,8 +103,12 @@ models:
         description: Category name.
         tests:
           - not_null
+      - name: item_sk
+        description: Surrogate key for the item (from int_items).
+        tests:
+          - not_null
       - name: item_code
-        description: Item identifier.
+        description: Natural item identifier.
         tests:
           - not_null
       - name: item_name
@@ -134,8 +143,12 @@ models:
         description: Category name.
         tests:
           - not_null
+      - name: item_sk
+        description: Surrogate key for the item (from int_items).
+        tests:
+          - not_null
       - name: item_code
-        description: Item identifier.
+        description: Natural item identifier.
         tests:
           - not_null
       - name: item_name

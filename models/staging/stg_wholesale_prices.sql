@@ -1,3 +1,5 @@
+{{ config(tags=['staging', 'pricing', 'items']) }}
+
 with loss as (
 
     select * from {{ ref('annex3') }}

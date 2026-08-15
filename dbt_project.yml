@@ -18,6 +18,15 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+models:
+  snowflake_project:
+    staging:
+      +tags: ["staging"]
+    intermediate:
+      +tags: ["intermediate"]
+    marts:
+      +tags: ["marts"]
+
 # Stamp annex1 with a load time so `dbt source freshness` can check the daily 13:00 refresh.
 # In production, set _loaded_at in the upstream ETL instead of this seed post-hook.
 seeds:

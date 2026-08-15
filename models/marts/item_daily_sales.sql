@@ -1,5 +1,7 @@
-
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    tags=['marts', 'sales', 'items']
+) }}
 
 with sales as (
 
@@ -9,7 +11,7 @@ with sales as (
 
 items as (
 
-    select * from {{ ref('stg_items') }}
+    select * from {{ ref('int_items') }}
 
 )
 
@@ -17,6 +19,7 @@ select
     sales.sales_date,
     items.category_code,
     items.category_name,
+    items.item_sk,
     sales.item_code,
     items.item_name,
     count(*) as transaction_count,
@@ -31,5 +34,6 @@ group by
     sales.sales_date,
     items.category_code,
     items.category_name,
+    items.item_sk,
     sales.item_code,
     items.item_name

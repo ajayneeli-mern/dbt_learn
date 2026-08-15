@@ -1,5 +1,7 @@
 -- models/staging/stg_items.sql
 
+{{ config(tags=['staging', 'items']) }}
+
 with source as (
 
     select * from {{ ref('annex1') }}

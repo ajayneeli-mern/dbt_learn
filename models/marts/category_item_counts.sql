@@ -1,10 +1,13 @@
 -- models/marts/category_item_counts.sql
 
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    tags=['marts', 'items']
+) }}
 
 with items as (
 
-    select * from {{ ref('stg_items') }}
+    select * from {{ ref('int_items') }}
 
 )
 

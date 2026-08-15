@@ -1,7 +1,10 @@
 -- models/marts/category_loss.sql
 -- Item-level category + loss from seeds: annex1 (items/categories) + annex4 (loss rates)
 
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    tags=['marts', 'loss', 'items']
+) }}
 
 with items as (
 

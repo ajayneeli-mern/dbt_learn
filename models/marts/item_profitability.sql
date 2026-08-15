@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    tags=['marts', 'finance', 'items']
+) }}
 
 with sales as (
 
@@ -22,6 +25,7 @@ select
     sales.sales_date,
     sales.category_code,
     sales.category_name,
+    sales.item_sk,
     sales.item_code,
     sales.item_name,
     sales.total_quantity_sold,

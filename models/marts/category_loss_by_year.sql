@@ -1,7 +1,10 @@
 -- models/marts/category_loss_by_year.sql
 -- Returned (lost) quantity by category per year from sales transactions.
 
-{{ config(materialized='table') }}
+{{ config(
+    materialized='table',
+    tags=['marts', 'loss', 'sales']
+) }}
 
 with sales as (
 

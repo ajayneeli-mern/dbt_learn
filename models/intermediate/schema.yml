@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: int_items
+    description: >
+      Ephemeral item dimension enrichment. Adds item_sk (surrogate key from item_code).
+      Not materialized in the warehouse — inlined as a CTE wherever it is ref'd.
+    columns:
+      - name: item_sk
+        description: Surrogate key hashed from item_code (dbt_utils.generate_surrogate_key).
+        tests:
+          - not_null
+          - unique
+      - name: item_code
+        description: Natural item identifier from staging.
+        tests:
+          - not_null
+          - unique
+      - name: item_name
+        description: Item name.
+        tests:
+          - not_null
+      - name: category_code
+        description: Category identifier.
+        tests:
+          - not_null
+      - name: category_name
+        description: Category name.
+        tests:
+          - not_null

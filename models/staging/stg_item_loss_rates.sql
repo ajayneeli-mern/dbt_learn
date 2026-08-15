@@ -1,3 +1,5 @@
+{{ config(tags=['staging', 'loss', 'items']) }}
+
 with source as (
 
     select * from {{ ref('annex4') }}

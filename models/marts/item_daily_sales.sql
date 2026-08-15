@@ -26,7 +26,7 @@ select
 from sales
 inner join items
     on sales.item_code = items.item_code
-where sales.sale_or_return = 'SALE'
+where lower(sales.sale_or_return) = 'sale'
 group by
     sales.sales_date,
     items.category_code,

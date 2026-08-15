@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_items
-    description: Standardized item master data derived from the current seeded raw input.
+    description: Standardized item master data derived from source raw.annex1 (daily 13:00 refresh).
     columns:
       - name: item_code
         description: Canonical item identifier.
@@ -79,6 +79,8 @@ models:
           - not_null
       - name: category_name
         description: Category name joined from the item master.
+        tests:
+          - not_null
 
   - name: stg_item_loss_rates
     description: Standardized item-level loss-rate assumptions.

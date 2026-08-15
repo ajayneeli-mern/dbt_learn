@@ -17,3 +17,12 @@ target-path: "target"  # directory which will store compiled SQL files
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
+
+# Stamp annex1 with a load time so `dbt source freshness` can check the daily 13:00 refresh.
+# In production, set _loaded_at in the upstream ETL instead of this seed post-hook.
+seeds:
+  snowflake_project:
+    annex1:
+      +post-hook:
+        - "alter table {{ this }} add column if not exists _loaded_at timestamp_ntz"
+        - "update {{ this }} set _loaded_at = current_timestamp()"

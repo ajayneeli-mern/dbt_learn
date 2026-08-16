@@ -6,19 +6,23 @@ seeds:
     columns:
       - name: Item_Code
         description: Natural item identifier from the source dataset.
+        data_type: varchar(64)
         tests:
           - not_null
           - unique
       - name: Item_Name
         description: Source item name.
+        data_type: varchar(256)
         tests:
           - not_null
       - name: Category_Code
         description: Natural category identifier assigned to the item.
+        data_type: varchar(32)
         tests:
           - not_null
       - name: Category_Name
         description: Source category name for the item.
+        data_type: varchar(128)
         tests:
           - not_null
 
@@ -27,30 +31,37 @@ seeds:
     columns:
       - name: Date
         description: Transaction calendar date.
+        data_type: date
         tests:
           - not_null
       - name: Time
         description: Transaction timestamp time component.
+        data_type: time
         tests:
           - not_null
       - name: Item_Code
         description: Item identifier recorded on the transaction.
+        data_type: varchar(64)
         tests:
           - not_null
       - name: Quantity_Sold
         description: Quantity sold or returned for the transaction row.
+        data_type: number(10,3)
         tests:
           - not_null
       - name: Unit_Selling_Price
         description: Unit retail price charged on the transaction row.
+        data_type: number(10,2)
         tests:
           - not_null
       - name: Sale_or_Return
         description: Flag indicating whether the row is a sale or a return.
+        data_type: varchar(16)
         tests:
           - not_null
       - name: Discount
         description: Discount indicator captured on the transaction.
+        data_type: varchar(8)
         tests:
           - not_null
 
@@ -59,14 +70,17 @@ seeds:
     columns:
       - name: Date
         description: Effective date of the wholesale price.
+        data_type: date
         tests:
           - not_null
       - name: Item_Code
         description: Item identifier for the priced product.
+        data_type: varchar(64)
         tests:
           - not_null
       - name: Wholesale_Price
         description: Unit wholesale cost for the item on the effective date.
+        data_type: number(10,2)
         tests:
           - not_null
 
@@ -75,14 +89,560 @@ seeds:
     columns:
       - name: Item_Code
         description: Item identifier for the loss-rate record.
+        data_type: varchar(64)
         tests:
           - not_null
           - unique
       - name: Item_Name
         description: Source item name associated with the loss rate.
+        data_type: varchar(256)
         tests:
           - not_null
       - name: Loss_Rate
         description: Percentage loss rate associated with the item.
+        data_type: number(10,2)
         tests:
           - not_null
+
+  - name: DIM_DELIVERY_PERSON
+    description: Seeded dimension table for delivery personnel.
+    columns:
+      - name: delivery_person_id
+        description: Unique identifier for the delivery person.
+        data_type: varchar(16)
+      - name: delivery_person_name
+        description: Name of the delivery person.
+        data_type: varchar(128)
+      - name: phone_number
+        description: Contact phone number of the delivery person.
+        data_type: varchar(32)
+      - name: gender
+        description: Gender of the delivery person.
+        data_type: varchar(16)
+      - name: date_of_joining
+        description: Date the delivery person joined.
+        data_type: date
+      - name: employment_type
+        description: Employment type (e.g. Contract, Full-Time).
+        data_type: varchar(16)
+      - name: vehicle_type
+        description: Vehicle used for deliveries.
+        data_type: varchar(32)
+      - name: location_id
+        description: Reference to the delivery person's location.
+        data_type: varchar(16)
+
+  - name: DIM_CUSTOMER
+    description: Seeded dimension table for customers.
+    columns:
+      - name: customer_id
+        description: Unique identifier for the customer.
+        data_type: varchar(16)
+      - name: first_name
+        description: Customer first name.
+        data_type: varchar(64)
+      - name: last_name
+        description: Customer last name.
+        data_type: varchar(64)
+      - name: email
+        description: Customer email address.
+        data_type: varchar(128)
+      - name: phone_number
+        description: Customer contact phone number.
+        data_type: varchar(32)
+      - name: gender
+        description: Customer gender code.
+        data_type: varchar(8)
+      - name: date_of_birth
+        description: Customer date of birth.
+        data_type: date
+      - name: registration_date
+        description: Date the customer registered.
+        data_type: date
+      - name: income_bracket
+        description: Customer income bracket classification.
+        data_type: varchar(32)
+      - name: marital_status
+        description: Customer marital status.
+        data_type: varchar(16)
+      - name: location_id
+        description: Reference to the customer's location.
+        data_type: varchar(16)
+      - name: upi_id
+        description: UPI payment identifier.
+        data_type: varchar(64)
+      - name: credit_card_number
+        description: Masked credit card number.
+        data_type: varchar(32)
+
+  - name: DIM_CHANNEL
+    description: Seeded dimension table for marketing channels.
+    columns:
+      - name: channel_id
+        description: Unique identifier for the channel.
+        data_type: varchar(16)
+      - name: channel_name
+        description: Channel name.
+        data_type: varchar(64)
+      - name: channel_type
+        description: Channel type classification.
+        data_type: varchar(32)
+      - name: description
+        description: Channel description.
+        data_type: varchar(256)
+
+  - name: DIM_CAMPAIGN
+    description: Seeded dimension table for marketing campaigns.
+    columns:
+      - name: campaign_id
+        description: Unique identifier for the campaign.
+        data_type: varchar(16)
+      - name: campaign_name
+        description: Campaign name.
+        data_type: varchar(256)
+      - name: campaign_type
+        description: Campaign type classification.
+        data_type: varchar(32)
+      - name: channel_id
+        description: Reference to the campaign channel.
+        data_type: varchar(16)
+      - name: start_date
+        description: Campaign start date.
+        data_type: date
+      - name: end_date
+        description: Campaign end date.
+        data_type: date
+      - name: budget
+        description: Campaign budget amount.
+        data_type: number(12,2)
+      - name: objective
+        description: Campaign objective.
+        data_type: varchar(32)
+
+  - name: DIM_CALENDAR
+    description: Seeded calendar dimension table.
+    columns:
+      - name: date_id
+        description: Integer date key in YYYYMMDD format.
+        data_type: number(10,0)
+      - name: full_date
+        description: Full calendar date.
+        data_type: date
+      - name: day
+        description: Day of month.
+        data_type: number(3,0)
+      - name: month
+        description: Month number.
+        data_type: number(3,0)
+      - name: month_name
+        description: Month name.
+        data_type: varchar(16)
+      - name: quarter
+        description: Calendar quarter.
+        data_type: number(3,0)
+      - name: year
+        description: Calendar year.
+        data_type: number(5,0)
+      - name: day_name
+        description: Day of week name.
+        data_type: varchar(16)
+      - name: is_weekend
+        description: Flag indicating whether the day is a weekend.
+        data_type: boolean
+
+  - name: FACT_CUSTOMER_RFM
+    description: Seeded fact table with customer recency, frequency, monetary metrics.
+    columns:
+      - name: customer_id
+        description: Unique identifier for the customer.
+        data_type: varchar(16)
+      - name: recency_days
+        description: Days since the customer's last purchase.
+        data_type: number(6,0)
+      - name: frequency_orders
+        description: Total number of orders placed.
+        data_type: number(6,0)
+      - name: monetary_value
+        description: Total monetary value of purchases.
+        data_type: number(18,4)
+      - name: avg_order_value
+        description: Average value per order.
+        data_type: number(18,6)
+      - name: first_purchase_date
+        description: Date of the customer's first purchase.
+        data_type: date
+      - name: last_purchase_date
+        description: Date of the customer's last purchase.
+        data_type: date
+      - name: customer_lifetime_days
+        description: Customer tenure in days.
+        data_type: number(6,0)
+      - name: rfm_score
+        description: Composite RFM score.
+        data_type: number(6,0)
+      - name: customer_segment
+        description: RFM-based customer segment label.
+        data_type: varchar(32)
+
+  - name: DIM_SELLER
+    description: Seeded dimension table for sellers.
+    columns:
+      - name: seller_id
+        description: Unique identifier for the seller.
+        data_type: varchar(16)
+      - name: seller_name
+        description: Seller name.
+        data_type: varchar(128)
+      - name: email
+        description: Seller email address.
+        data_type: varchar(128)
+      - name: phone_number
+        description: Seller contact phone number.
+        data_type: varchar(32)
+      - name: join_date
+        description: Date the seller joined.
+        data_type: date
+      - name: location_id
+        description: Reference to the seller's location.
+        data_type: varchar(16)
+      - name: rating
+        description: Seller average rating.
+        data_type: number(3,1)
+      - name: category_focus
+        description: Primary product category of the seller.
+        data_type: varchar(32)
+      - name: bank_name
+        description: Seller bank name.
+        data_type: varchar(64)
+      - name: bank_account_number
+        description: Seller bank account number (kept as text to preserve formatting).
+        data_type: varchar(32)
+      - name: ifsc_code
+        description: Bank IFSC code.
+        data_type: varchar(16)
+
+  - name: DIM_PRODUCT
+    description: Seeded dimension table for products.
+    columns:
+      - name: product_id
+        description: Unique identifier for the product.
+        data_type: varchar(16)
+      - name: product_name
+        description: Product name.
+        data_type: varchar(256)
+      - name: brand
+        description: Product brand.
+        data_type: varchar(64)
+      - name: category
+        description: Product category.
+        data_type: varchar(64)
+      - name: sub_category
+        description: Product sub-category.
+        data_type: varchar(64)
+      - name: list_price
+        description: Product list price.
+        data_type: number(12,2)
+
+  - name: DIM_PAYMENT
+    description: Seeded dimension table for payment methods.
+    columns:
+      - name: payment_id
+        description: Unique identifier for the payment method.
+        data_type: varchar(16)
+      - name: payment_method
+        description: Payment method name.
+        data_type: varchar(32)
+      - name: payment_provider
+        description: Payment provider name.
+        data_type: varchar(32)
+      - name: description
+        description: Payment method description.
+        data_type: varchar(256)
+
+  - name: DIM_LOCATION
+    description: Seeded dimension table for locations.
+    columns:
+      - name: location_id
+        description: Unique identifier for the location.
+        data_type: varchar(16)
+      - name: state
+        description: State name.
+        data_type: varchar(64)
+      - name: city
+        description: City name.
+        data_type: varchar(64)
+      - name: postal_code
+        description: Postal code (kept as text to preserve leading zeros).
+        data_type: varchar(16)
+      - name: region
+        description: Region name.
+        data_type: varchar(16)
+      - name: latitude
+        description: Location latitude.
+        data_type: number(9,6)
+      - name: longitude
+        description: Location longitude.
+        data_type: number(9,6)
+      - name: area_type
+        description: Area type classification.
+        data_type: varchar(16)
+      - name: location_category
+        description: Location tier classification.
+        data_type: varchar(16)
+
+  - name: DIM_FULFILLMENT
+    description: Seeded dimension table for fulfillment/shipping options.
+    columns:
+      - name: fulfillment_id
+        description: Unique identifier for the fulfillment method.
+        data_type: varchar(16)
+      - name: shipping_method
+        description: Shipping method name.
+        data_type: varchar(32)
+      - name: service_level
+        description: Service level classification.
+        data_type: varchar(32)
+      - name: delivery_sla_days
+        description: Promised delivery SLA in days.
+        data_type: number(4,0)
+      - name: base_shipping_cost
+        description: Base shipping cost.
+        data_type: number(10,2)
+
+  - name: FACT_ORDERS
+    description: Seeded fact table for order line items.
+    columns:
+      - name: order_line_id
+        description: Unique identifier for the order line.
+        data_type: varchar(16)
+      - name: order_id
+        description: Order identifier.
+        data_type: varchar(16)
+      - name: date_id
+        description: Order date key.
+        data_type: date
+      - name: order_date
+        description: Order date.
+        data_type: date
+      - name: customer_id
+        description: Reference to the customer.
+        data_type: varchar(16)
+      - name: product_id
+        description: Reference to the product.
+        data_type: varchar(16)
+      - name: category
+        description: Product category on the order line.
+        data_type: varchar(64)
+      - name: seller_id
+        description: Reference to the seller.
+        data_type: varchar(16)
+      - name: seller_rating
+        description: Seller rating captured at order time.
+        data_type: number(3,1)
+      - name: location_id
+        description: Reference to the order location.
+        data_type: varchar(16)
+      - name: delivery_person_id
+        description: Reference to the delivery person.
+        data_type: varchar(16)
+      - name: payment_id
+        description: Reference to the payment method.
+        data_type: varchar(16)
+      - name: campaign_id
+        description: Reference to the campaign.
+        data_type: varchar(16)
+      - name: fulfillment_id
+        description: Reference to the fulfillment method.
+        data_type: varchar(16)
+      - name: quantity
+        description: Quantity ordered.
+        data_type: number(8,0)
+      - name: unit_price
+        description: Unit price of the product.
+        data_type: number(12,2)
+      - name: discount_percentage
+        description: Discount percentage applied.
+        data_type: number(6,2)
+      - name: tax_percentage
+        description: Tax percentage applied.
+        data_type: number(6,2)
+      - name: shipping_fee
+        description: Shipping fee charged.
+        data_type: number(10,2)
+      - name: expected_delivery_date
+        description: Expected delivery date.
+        data_type: date
+      - name: actual_delivery_date
+        description: Actual delivery date.
+        data_type: date
+      - name: delivery_rating
+        description: Delivery rating given by the customer.
+        data_type: number(3,1)
+      - name: order_status
+        description: Order status.
+        data_type: varchar(32)
+      - name: return_flag
+        description: Flag indicating whether the line was returned.
+        data_type: boolean
+      - name: refund_amount
+        description: Refund amount issued.
+        data_type: number(12,2)
+      - name: return_date
+        description: Date of return, if any.
+        data_type: date
+      - name: customer_rating
+        description: Customer rating for the product.
+        data_type: number(3,1)
+      - name: review_text
+        description: Customer review text.
+        data_type: varchar(512)
+      - name: sentiment_score
+        description: Sentiment score of the review.
+        data_type: number(4,2)
+      - name: delivery_delay_days
+        description: Days of delivery delay.
+        data_type: number(6,0)
+      - name: delivery_sla_days
+        description: Delivery SLA in days.
+        data_type: number(6,0)
+      - name: gross_amount
+        description: Gross order amount.
+        data_type: number(14,2)
+      - name: discount_amount
+        description: Discount amount applied.
+        data_type: number(14,4)
+      - name: tax_amount
+        description: Tax amount charged.
+        data_type: number(14,2)
+      - name: net_amount
+        description: Net order amount after discounts and tax.
+        data_type: number(14,4)
+
+  - name: FACT_MARKETING_SPEND
+    description: Seeded fact table for marketing campaign spend and performance.
+    columns:
+      - name: marketing_id
+        description: Unique identifier for the marketing record.
+        data_type: varchar(16)
+      - name: date_id
+        description: Date key in YYYYMMDD format.
+        data_type: number(10,0)
+      - name: campaign_id
+        description: Reference to the campaign.
+        data_type: varchar(16)
+      - name: channel_id
+        description: Reference to the channel.
+        data_type: varchar(16)
+      - name: spend_amount
+        description: Amount spent on the campaign.
+        data_type: number(12,2)
+      - name: impressions
+        description: Number of impressions.
+        data_type: number(12,0)
+      - name: clicks
+        description: Number of clicks.
+        data_type: number(12,0)
+      - name: conversions
+        description: Number of conversions.
+        data_type: number(12,0)
+      - name: revenue_generated
+        description: Revenue generated from the campaign.
+        data_type: number(12,2)
+
+  - name: FACT_FULFILLMENT_PERFORMANCE
+    description: Seeded fact table for daily delivery performance by fulfillment/location/delivery person.
+    columns:
+      - name: date_id
+        description: Date key in YYYYMMDD format.
+        data_type: number(10,0)
+      - name: fulfillment_id
+        description: Reference to the fulfillment method.
+        data_type: varchar(16)
+      - name: location_id
+        description: Reference to the location.
+        data_type: varchar(16)
+      - name: delivery_person_id
+        description: Reference to the delivery person.
+        data_type: varchar(16)
+      - name: total_deliveries
+        description: Total deliveries assigned.
+        data_type: number(8,0)
+      - name: completed_deliveries
+        description: Deliveries completed.
+        data_type: number(8,0)
+      - name: returned_deliveries
+        description: Deliveries returned.
+        data_type: number(8,0)
+      - name: avg_delivery_delay_days
+        description: Average delivery delay in days.
+        data_type: number(6,2)
+      - name: avg_delivery_rating
+        description: Average delivery rating.
+        data_type: number(3,1)
+      - name: total_shipping_cost
+        description: Total shipping cost incurred.
+        data_type: number(12,2)
+      - name: on_time_deliveries
+        description: Deliveries completed on time.
+        data_type: number(8,0)
+      - name: late_deliveries
+        description: Deliveries completed late.
+        data_type: number(8,0)
+      - name: sla_breach_rate
+        description: Rate of SLA breaches.
+        data_type: number(6,2)
+      - name: return_rate
+        description: Rate of returned deliveries.
+        data_type: number(6,2)
+
+  - name: FACT_RETURNS
+    description: Seeded fact table for returned order lines.
+    columns:
+      - name: order_line_id
+        description: Unique identifier for the order line.
+        data_type: varchar(16)
+      - name: order_id
+        description: Order identifier.
+        data_type: varchar(16)
+      - name: date_id
+        description: Date key in YYYYMMDD format.
+        data_type: number(10,0)
+      - name: customer_id
+        description: Reference to the customer.
+        data_type: varchar(16)
+      - name: product_id
+        description: Reference to the product.
+        data_type: varchar(16)
+      - name: location_id
+        description: Reference to the location.
+        data_type: varchar(16)
+      - name: payment_id
+        description: Reference to the payment method.
+        data_type: varchar(16)
+      - name: fulfillment_id
+        description: Reference to the fulfillment method.
+        data_type: varchar(16)
+      - name: quantity
+        description: Quantity returned.
+        data_type: number(8,0)
+      - name: unit_price
+        description: Unit price of the returned product.
+        data_type: number(12,2)
+      - name: refund_amount
+        description: Refund amount issued.
+        data_type: number(12,2)
+      - name: review_text
+        description: Customer review text for the return.
+        data_type: varchar(512)
+      - name: days_to_return
+        description: Days between purchase and return.
+        data_type: number(6,0)
+      - name: restocking_fee
+        description: Restocking fee charged.
+        data_type: number(12,2)
+      - name: customer_rating
+        description: Customer rating for the product.
+        data_type: number(3,1)
+      - name: sentiment_score
+        description: Sentiment score of the review.
+        data_type: number(4,2)

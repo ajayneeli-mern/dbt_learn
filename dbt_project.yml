@@ -18,6 +18,13 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+# Project-Level Lifecycle Hooks
+on-run-start:
+  - "alter session set query_tag = 'dbt_run_{{ invocation_id }}'"
+
+on-run-end:
+  - "alter session unset query_tag"
+
 models:
   snowflake_project:
     staging:

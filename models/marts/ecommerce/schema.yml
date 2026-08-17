@@ -1,8 +1,47 @@
 version: 2
 
-# Ecommerce marts — add fct_/dim_ models here as the domain is built out.
-
 models:
+  - name: fct_order_deliveries
+    description: Mart table for orders joined with customer, delivery personnel, and delivery location details.
+    columns:
+      - name: order_line_id
+        description: Primary key for the order line item.
+        tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        description: Natural order identifier.
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: Foreign key reference to customer dimension.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_ecommerce__customers')
+              field: customer_id
+
+      - name: delivery_person_id
+        description: Foreign key reference to delivery person dimension.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_ecommerce__delivery_persons')
+              field: delivery_person_id
+
+      - name: delivery_person_employment_type
+        description: Employment type of the delivery partner.
+        tests:
+          - accepted_values:
+              values: ['Contract', 'Full-Time']
+
+      - name: net_item_amount
+        description: Net price charged for the order line.
+        tests:
+          - not_null
+
   - name: seller_campaign
     description: Order activity aggregated by seller, campaign, channel, and product category.
     columns:

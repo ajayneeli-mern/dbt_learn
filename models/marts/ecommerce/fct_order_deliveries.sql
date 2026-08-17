@@ -1,7 +1,13 @@
 {{
     config(
         materialized='table',
-        tags=['marts', 'ecommerce', 'deliveries']
+        tags=['marts', 'ecommerce', 'deliveries'],
+        pre_hook=[
+            "alter session set query_tag = 'dbt_fct_order_deliveries_build'"
+        ],
+        post_hook=[
+            "comment on table {{ this }} is 'Ecommerce order deliveries mart refreshed at current timestamp'"
+        ]
     )
 }}
 

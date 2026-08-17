@@ -22,10 +22,17 @@ models:
   snowflake_project:
     staging:
       +tags: ["staging"]
+      +materialized: view
     intermediate:
       +tags: ["intermediate"]
+      +materialized: view
     marts:
       +tags: ["marts"]
+      +materialized: table
+      supermarkets:
+        +tags: ["supermarkets"]
+      ecommerce:
+        +tags: ["ecommerce"]
 
 # Stamp annex1 with a load time so `dbt source freshness` can check the daily 13:00 refresh.
 # In production, set _loaded_at in the upstream ETL instead of this seed post-hook.

@@ -1,0 +1,112 @@
+erDiagram
+    DIM_CUSTOMER ||--o{ FACT_ORDERS : "places"
+    DIM_PRODUCT ||--o{ FACT_ORDERS : "contains"
+    DIM_SELLER ||--o{ FACT_ORDERS : "sells"
+    DIM_LOCATION ||--o{ FACT_ORDERS : "delivers_to"
+    DIM_DELIVERY_PERSON ||--o{ FACT_ORDERS : "delivers"
+    DIM_PAYMENT ||--o{ FACT_ORDERS : "pays_with"
+    DIM_CAMPAIGN ||--o{ FACT_ORDERS : "attributed_to"
+    DIM_FULFILLMENT ||--o{ FACT_ORDERS : "shipped_via"
+    DIM_CALENDAR ||--o{ FACT_ORDERS : "on"
+    DIM_CUSTOMER ||--o{ FACT_RETURNS : "returns"
+    DIM_PRODUCT ||--o{ FACT_RETURNS : "returned"
+    DIM_LOCATION ||--o{ FACT_RETURNS : "at"
+    DIM_PAYMENT ||--o{ FACT_RETURNS : "refunded_via"
+    DIM_FULFILLMENT ||--o{ FACT_RETURNS : "returned_via"
+    DIM_CALENDAR ||--o{ FACT_RETURNS : "on"
+    DIM_CAMPAIGN ||--o{ FACT_MARKETING_SPEND : "spends_on"
+    DIM_CHANNEL ||--o{ FACT_MARKETING_SPEND : "through"
+    DIM_CALENDAR ||--o{ FACT_MARKETING_SPEND : "on"
+    DIM_CUSTOMER ||--o{ FACT_CUSTOMER_RFM : "measures"
+    DIM_FULFILLMENT ||--o{ FACT_FULFILLMENT_PERFORMANCE : "perf_of"
+    DIM_LOCATION ||--o{ FACT_FULFILLMENT_PERFORMANCE : "at"
+    DIM_DELIVERY_PERSON ||--o{ FACT_FULFILLMENT_PERFORMANCE : "perf_by"
+    DIM_CALENDAR ||--o{ FACT_FULFILLMENT_PERFORMANCE : "on"
+
+    DIM_CUSTOMER {
+        varchar customer_id PK
+        varchar first_name
+        varchar last_name
+        varchar location_id FK
+    }
+    DIM_PRODUCT {
+        varchar product_id PK
+        varchar product_name
+        varchar category
+    }
+    DIM_SELLER {
+        varchar seller_id PK
+        varchar seller_name
+        varchar location_id FK
+    }
+    DIM_LOCATION {
+        varchar location_id PK
+        varchar city
+        varchar state
+    }
+    DIM_DELIVERY_PERSON {
+        varchar delivery_person_id PK
+        varchar delivery_person_name
+        varchar location_id FK
+    }
+    DIM_PAYMENT {
+        varchar payment_id PK
+        varchar payment_method
+    }
+    DIM_CAMPAIGN {
+        varchar campaign_id PK
+        varchar campaign_name
+        varchar channel_id FK
+    }
+    DIM_CHANNEL {
+        varchar channel_id PK
+        varchar channel_name
+    }
+    DIM_FULFILLMENT {
+        varchar fulfillment_id PK
+        varchar shipping_method
+    }
+    DIM_CALENDAR {
+        int date_id PK
+        date full_date
+    }
+    FACT_ORDERS {
+        varchar order_line_id PK
+        varchar order_id
+        varchar customer_id FK
+        varchar product_id FK
+        varchar seller_id FK
+        varchar location_id FK
+        varchar delivery_person_id FK
+        varchar payment_id FK
+        varchar campaign_id FK
+        varchar fulfillment_id FK
+        date order_date FK
+        number net_amount
+    }
+    FACT_RETURNS {
+        varchar order_line_id PK
+        varchar customer_id FK
+        varchar product_id FK
+        varchar location_id FK
+        varchar payment_id FK
+        varchar fulfillment_id FK
+        number refund_amount
+    }
+    FACT_MARKETING_SPEND {
+        varchar marketing_id PK
+        varchar campaign_id FK
+        varchar channel_id FK
+        number spend_amount
+    }
+    FACT_CUSTOMER_RFM {
+        varchar customer_id PK
+        number monetary_value
+        varchar customer_segment
+    }
+    FACT_FULFILLMENT_PERFORMANCE {
+        varchar delivery_person_id PK
+        varchar fulfillment_id FK
+        varchar location_id FK
+        number total_deliveries
+    }

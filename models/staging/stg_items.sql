@@ -4,7 +4,7 @@
 
 with source as (
 
-    select * from {{ ref('annex1') }}
+    select * from {{ source('raw_supermarkets','annex1') }}
 
 ),
 

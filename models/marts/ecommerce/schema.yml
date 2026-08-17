@@ -1,0 +1,38 @@
+version: 2
+
+# Ecommerce marts — add fct_/dim_ models here as the domain is built out.
+
+models:
+  - name: seller_campaign
+    description: Order activity aggregated by seller, campaign, channel, and product category.
+    columns:
+      - name: campaign_id
+        description: Reference to the marketing campaign.
+        tests:
+          - not_null
+      - name: channel_id
+        description: Reference to the campaign's marketing channel.
+      - name: seller_id
+        description: Reference to the seller.
+        tests:
+          - not_null
+      - name: category
+        description: Product category on the order lines.
+        tests:
+          - not_null
+      - name: number_of_order_lines
+        description: Number of order line items in the grain.
+        tests:
+          - not_null
+      - name: total_quantity
+        description: Total quantity ordered in the grain.
+        tests:
+          - not_null
+      - name: gross_amount
+        description: Gross order amount in the grain.
+        tests:
+          - not_null
+      - name: net_amount
+        description: Net order amount after discounts and tax in the grain.
+        tests:
+          - not_null

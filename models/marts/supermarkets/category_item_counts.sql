@@ -1,4 +1,4 @@
--- models/marts/category_item_counts.sql
+-- models/marts/supermarkets/category_item_counts.sql
 
 {{ config(
     materialized='table',

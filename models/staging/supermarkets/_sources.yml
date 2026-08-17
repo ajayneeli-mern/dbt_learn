@@ -1,0 +1,52 @@
+version: 2
+
+sources:
+  - name: raw_supermarkets
+    description: >
+      Raw supermarket landing tables. In this project they are loaded via dbt seed;
+      in production they would be the upstream tables refreshed by ETL.
+    schema: "{{ target.schema }}"
+    database: "{{ target.database }}"
+    tables:
+      - name: annex1
+        description: >
+          Item master data. Upstream refresh is daily at 13:00.
+          Freshness is evaluated from _loaded_at (set on each land/seed).
+        config:
+          freshness:
+            # Daily 13:00 load → allow ~1 day lag before warn, tighter error window
+            warn_after:
+              count: 25
+              period: hour
+            error_after:
+              count: 36
+              period: hour
+          loaded_at_field: _loaded_at
+        columns:
+          - name: Item_Code
+            description: Natural item identifier from the source dataset.
+            tests:
+              - not_null
+              - unique
+          - name: Item_Name
+            description: Source item name.
+            tests:
+              - not_null
+          - name: Category_Code
+            description: Natural category identifier assigned to the item.
+            tests:
+              - not_null
+          - name: Category_Name
+            description: Source category name for the item.
+            tests:
+              - not_null
+          - name: _loaded_at
+            description: Warehouse load timestamp used for source freshness checks.
+            tests:
+              - not_null
+      - name: annex2
+        description: Sales and return transactions. Upstream refresh mirrors the item master daily load.
+      - name: annex3
+        description: Daily wholesale prices by item. Upstream refresh mirrors the item master daily load.
+      - name: annex4
+        description: Item-level loss-rate assumptions. Upstream refresh mirrors the item master daily load.

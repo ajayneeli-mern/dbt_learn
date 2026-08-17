@@ -1,4 +1,4 @@
--- models/marts/category_loss_by_year.sql
+-- models/marts/supermarkets/category_loss_by_year.sql
 -- Returned (lost) quantity by category per year from sales transactions.
 
 {{ config(

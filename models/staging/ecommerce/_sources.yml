@@ -1,0 +1,40 @@
+version: 2
+
+sources:
+  - name: raw_ecommerce
+    description: >
+      Raw ecommerce landing tables. In this project they are loaded via dbt seed;
+      in production they would be the upstream tables refreshed by ETL.
+    schema: "{{ target.schema }}"
+    database: "{{ target.database }}"
+    tables:
+      - name: DIM_CALENDAR
+        description: Calendar dimension.
+      - name: DIM_CAMPAIGN
+        description: Marketing campaign dimension.
+      - name: DIM_CHANNEL
+        description: Marketing channel dimension.
+      - name: DIM_CUSTOMER
+        description: Customer dimension.
+      - name: DIM_DELIVERY_PERSON
+        description: Delivery personnel dimension.
+      - name: DIM_FULFILLMENT
+        description: Fulfillment and shipping method dimension.
+      - name: DIM_LOCATION
+        description: Location dimension.
+      - name: DIM_PAYMENT
+        description: Payment method dimension.
+      - name: DIM_PRODUCT
+        description: Product dimension.
+      - name: DIM_SELLER
+        description: Seller dimension.
+      - name: FACT_CUSTOMER_RFM
+        description: Customer recency, frequency, and monetary metrics fact.
+      - name: FACT_FULFILLMENT_PERFORMANCE
+        description: Daily delivery performance fact.
+      - name: FACT_MARKETING_SPEND
+        description: Marketing campaign spend and performance fact.
+      - name: FACT_ORDERS
+        description: Order line item fact.
+      - name: FACT_RETURNS
+        description: Returned order lines fact.

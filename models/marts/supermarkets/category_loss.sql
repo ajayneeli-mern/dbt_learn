@@ -1,4 +1,4 @@
--- models/marts/category_loss.sql
+-- models/marts/supermarkets/category_loss.sql
 -- Item-level category + loss from seeds: annex1 (items/categories) + annex4 (loss rates)
 
 {{ config(

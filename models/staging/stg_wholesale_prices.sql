@@ -2,12 +2,12 @@
 
 with loss as (
 
-    select * from {{ ref('annex3') }}
+    select * from {{ source('raw_supermarkets','annex3') }}
 
 ),
 
 items as (
-    select * from {{ ref('annex1') }}
+    select * from {{ source('raw_supermarkets','annex1') }}
 )
 
 select

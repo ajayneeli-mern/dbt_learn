@@ -1,0 +1,2 @@
+# Configure this as a Cloud Composer PyPI package before triggering the DAG.
+dbt-snowflake==1.8.3

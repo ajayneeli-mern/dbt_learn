@@ -1,0 +1,71 @@
+name: Validate dbt and deploy to Cloud Composer
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install 'dbt-snowflake==1.8.3'
+      - name: Resolve packages and parse project
+        env:
+          SNOWFLAKE_ACCOUNT: ci_account
+          SNOWFLAKE_USER: ci_user
+          SNOWFLAKE_PASSWORD: ci_password
+        run: |
+          dbt deps --profiles-dir .github
+          dbt parse --profiles-dir .github
+
+  deploy-and-run:
+    needs: validate
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Assemble Composer DAG payload
+        run: |
+          mkdir -p deploy/composer/dbt_project
+          cp airflow/dags/dbt_build.py deploy/composer/
+          cp dbt_project.yml packages.yml package-lock.yml deploy/composer/dbt_project/
+          cp -R models macros seeds snapshots tests deploy/composer/dbt_project/
+      - name: Upload DAG and dbt project
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT_ID }}
+          COMPOSER_LOCATION: ${{ vars.COMPOSER_LOCATION }}
+          COMPOSER_ENVIRONMENT: ${{ vars.COMPOSER_ENVIRONMENT }}
+        run: |
+          test -n "$GCP_PROJECT" && test -n "$COMPOSER_LOCATION" && test -n "$COMPOSER_ENVIRONMENT"
+          DAG_GCS_PREFIX="$(gcloud composer environments describe "$COMPOSER_ENVIRONMENT" --project "$GCP_PROJECT" --location "$COMPOSER_LOCATION" --format='value(config.dagGcsPrefix)')"
+          gcloud storage rsync --recursive --delete-unmatched-destination-objects deploy/composer "${DAG_GCS_PREFIX}/dbt_learn"
+      - name: Trigger the deployed dbt build
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT_ID }}
+          COMPOSER_LOCATION: ${{ vars.COMPOSER_LOCATION }}
+          COMPOSER_ENVIRONMENT: ${{ vars.COMPOSER_ENVIRONMENT }}
+        run: |
+          # DAG synchronization is asynchronous; retry until the scheduler has parsed it.
+          for attempt in {1..12}; do
+            if gcloud composer environments run "$COMPOSER_ENVIRONMENT" --project "$GCP_PROJECT" --location "$COMPOSER_LOCATION" dags trigger -- dbt_build; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 12 ]; then exit 1; fi
+            sleep 15
+          done

@@ -1,0 +1,27 @@
+# Cloud Build trigger: run this file on every push to main.
+# Required trigger substitutions:
+#   _COMPOSER_ENVIRONMENT  e.g. production-composer
+#   _COMPOSER_LOCATION     e.g. asia-south1
+steps:
+  - id: Deploy DAG and dbt project to Cloud Composer
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        mkdir -p /workspace/deploy/composer/dbt_project
+        cp airflow/dags/dbt_build.py /workspace/deploy/composer/
+        cp dbt_project.yml packages.yml package-lock.yml /workspace/deploy/composer/dbt_project/
+        cp -R models macros seeds snapshots tests /workspace/deploy/composer/dbt_project/
+
+        DAG_GCS_PREFIX="$(gcloud composer environments describe "${_COMPOSER_ENVIRONMENT}" \
+          --project "$PROJECT_ID" \
+          --location "${_COMPOSER_LOCATION}" \
+          --format='value(config.dagGcsPrefix)')"
+
+        # This only owns dags/dbt_learn, so it cannot delete other Composer DAGs.
+        gcloud storage rsync --recursive --delete-unmatched-destination-objects \
+          /workspace/deploy/composer "${DAG_GCS_PREFIX}/dbt_learn"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

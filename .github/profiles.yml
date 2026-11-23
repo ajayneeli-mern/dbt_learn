@@ -1,0 +1,13 @@
+snowflake_project:
+  target: ci
+  outputs:
+    ci:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: TRANSFORMER
+      warehouse: TRANSFORMING
+      database: ANALYTICS
+      schema: DBT_CI
+      threads: 1

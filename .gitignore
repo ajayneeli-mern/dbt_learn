@@ -5,3 +5,5 @@ dbt_packages/
 logs/
 dbt_internal_packages/
 config.json
+deploy/
+docs
